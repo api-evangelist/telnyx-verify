@@ -1,0 +1,99 @@
+aid: telnyx-verify
+name: Telnyx Verify API
+review:
+  question: Does Telnyx Verify API expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-11'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. The Telnyx Verify and Number Lookup
+    endpoints are request/response REST over HTTPS on api.telnyx.com/v2. The
+    only server-push surface is HTTP webhooks: a Verify profile can register a
+    webhook_url (and webhook_failover_url) to which Telnyx POSTs verification
+    lifecycle events (verification.completed / expired). Webhooks are
+    server-to-endpoint HTTP callbacks, not a client-subscribable WebSocket
+    (ws:// or wss://) stream on Telnyx's own API, so there is no WebSocket
+    channel to model for the Verify/Number Lookup product. (Telnyx's broader
+    platform does offer real-time media/RTC transports for Voice and Call
+    Control, but those are out of scope for this Verify + Number Lookup entry.)
+findings:
+  summary: |
+    Telnyx Verify and Number Lookup do not expose a documented public WebSocket
+    API. Both are part of the Telnyx API v2 (base https://api.telnyx.com/v2),
+    authenticated with a Bearer API key, and are pure request/response REST over
+    HTTPS. Verify triggers an OTP over SMS, voice call, flash call, or WhatsApp
+    (POST /verifications/{sms,call,flashcall,whatsapp}) and checks the submitted
+    code (POST /verifications/{id}/actions/verify and the by_phone_number
+    variant). Verify Profiles (/verify_profiles and /verify_profiles/templates)
+    hold reusable per-channel configuration. Number Lookup is a single
+    GET /number_lookup/{phone_number} returning carrier, line-type,
+    caller-name (CNAM), and portability data. Asynchronous results are delivered
+    via HTTP webhooks configured on the Verify profile - not via a WebSocket.
+    No ws:// or wss:// endpoint is documented for these products.
+  openSource: |
+    The Verify/Number Lookup service itself is a proprietary hosted API. Telnyx
+    publishes the full API v2 OpenAPI specification openly
+    (github.com/team-telnyx/openapi) and maintains open-source SDKs
+    (telnyx-go, telnyx-node, telnyx-python, etc.) and a telnyx-mock server, all
+    of which cover the Verify and Number Lookup endpoints.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.telnyx.com/v2
+      documented: true
+      note: Verify, Verify Profiles, and Number Lookup are all request/response REST over HTTPS with Bearer auth.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Verify profiles POST verification lifecycle events to a configured webhook_url. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented for the Verify or Number Lookup products as of the review date.
+  endpointsConfirmedRest:
+    - POST   https://api.telnyx.com/v2/verifications/sms
+    - POST   https://api.telnyx.com/v2/verifications/call
+    - POST   https://api.telnyx.com/v2/verifications/flashcall
+    - POST   https://api.telnyx.com/v2/verifications/whatsapp
+    - GET    https://api.telnyx.com/v2/verifications/by_phone_number/{phone_number}
+    - POST   https://api.telnyx.com/v2/verifications/by_phone_number/{phone_number}/actions/verify
+    - GET    https://api.telnyx.com/v2/verifications/{verification_id}
+    - POST   https://api.telnyx.com/v2/verifications/{verification_id}/actions/verify
+    - GET    https://api.telnyx.com/v2/verify_profiles
+    - POST   https://api.telnyx.com/v2/verify_profiles
+    - GET    https://api.telnyx.com/v2/verify_profiles/{verify_profile_id}
+    - PATCH  https://api.telnyx.com/v2/verify_profiles/{verify_profile_id}
+    - DELETE https://api.telnyx.com/v2/verify_profiles/{verify_profile_id}
+    - GET    https://api.telnyx.com/v2/verify_profiles/templates
+    - POST   https://api.telnyx.com/v2/verify_profiles/templates
+    - PATCH  https://api.telnyx.com/v2/verify_profiles/templates/{template_id}
+    - GET    https://api.telnyx.com/v2/number_lookup/{phone_number}
+sources:
+  - url: https://developers.telnyx.com/docs/identity/verify/quickstart
+    type: Documentation
+    note: Verify quickstart; Verify profiles and SMS/call/flashcall/WhatsApp channels. Bearer auth, REST.
+  - url: https://developers.telnyx.com/docs/identity/number-lookup/quickstart
+    type: Documentation
+    note: Number Lookup quickstart; single GET /number_lookup/{phone_number}.
+  - url: https://github.com/team-telnyx/openapi
+    type: OpenAPI
+    note: Official Telnyx API v2 OpenAPI spec; source of the exact Verify and Number Lookup paths, single api.telnyx.com/v2 server, and Bearer (API key) security scheme.
+  - url: https://telnyx.com/products/verify-api
+    type: ProductPage
+    note: Verify product overview - SMS, voice, flash call channels; anti-fraud (SMS pumping, brute force); webhooks.
+  - url: https://telnyx.com/products/number-lookup
+    type: ProductPage
+    note: Number Lookup product overview - carrier, caller name (CNAM), line type, portability.
+  - url: https://telnyx.com/pricing/verify-api
+    type: Pricing
+    note: Per-successful-verification fee plus channel-delivery cost.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists on the Verify or Number Lookup
+    products - they are request/response REST, with asynchronous verification
+    results delivered by HTTP webhooks configured on the Verify profile. No
+    AsyncAPI document was created because there is no client-subscribable
+    server-push transport (WebSocket/SSE) on these endpoints to model.

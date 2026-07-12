@@ -1,0 +1,68 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Telnyx Verify API
+providerId: telnyx-verify
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Number Verification
+- Phone Verification
+- OTP
+- 2FA
+- Lookup
+- Rate Limiting
+- Quotas
+description: >-
+  Telnyx applies platform-wide API rate limiting on api.telnyx.com and returns
+  HTTP 429 when a caller exceeds its allowance; Telnyx does not publish a single
+  fixed numeric per-endpoint limit for the Verify or Number Lookup endpoints.
+  In practice, verification throughput is also shaped by anti-abuse controls -
+  per-phone-number send limits, resend cooldowns, and code-expiry timeouts on
+  the Verify profile - which exist to blunt SMS pumping, brute-force, and OTP
+  fraud rather than to cap legitimate traffic. Number Lookup throughput is
+  governed by the same platform request limiting plus your account standing.
+notes: >-
+  Numeric per-second/per-minute limits are not documented on the public Verify
+  or Number Lookup reference as of the review date; they are enforced at the
+  Telnyx platform level and can be raised for an account. The values below are
+  modeled from Telnyx's general API behavior and anti-fraud posture - confirm
+  concrete limits with Telnyx support for a specific account.
+sources:
+- https://developers.telnyx.com/docs/identity/verify/quickstart
+- https://developers.telnyx.com/docs/identity/number-lookup/quickstart
+- https://telnyx.com/products/verify-api
+responseCodes:
+  throttled: 429
+limits:
+- name: Platform API Requests
+  scope: account
+  metric: requests
+  limit: not published (platform-enforced, HTTP 429 on exceed)
+  notes: Telnyx rate-limits api.telnyx.com per account; no fixed public number for Verify/Number Lookup endpoints.
+- name: Per-Phone-Number Verification Sends
+  scope: phone_number
+  metric: verifications
+  limit: anti-abuse throttled (modeled)
+  notes: Verify enforces per-recipient send limits and resend cooldowns to blunt SMS pumping and brute force.
+- name: Verification Code Expiry
+  scope: verification
+  metric: seconds
+  limit: configurable via timeout_secs on the Verify profile
+  notes: Pending verifications expire after the profile timeout; expired codes are rejected.
+- name: Number Lookup Requests
+  scope: account
+  metric: lookups
+  limit: platform-enforced
+  notes: Governed by the same platform request limiting; billed per lookup.
+policies:
+- name: Backoff Strategy
+  description: On HTTP 429 responses, implement exponential backoff with jitter before retrying.
+- name: Anti-Fraud Throttling
+  description: Verify applies per-number send caps, resend cooldowns, and code-expiry timeouts to reduce SMS pumping, brute-force, and OTP fraud.
+- name: Webhook Delivery
+  description: Prefer verification webhooks over tight polling of the retrieve/list endpoints to stay within request limits.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

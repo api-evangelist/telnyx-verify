@@ -1,0 +1,137 @@
+aid: telnyx-verify
+url: https://raw.githubusercontent.com/api-evangelist/telnyx-verify/refs/heads/main/apis.yml
+name: Telnyx Verify API
+kind: company
+description: >-
+  Telnyx Verify API is a phone-number verification and two-factor
+  authentication (2FA / OTP) product, paired with Telnyx Number Lookup for
+  number intelligence (carrier, line type, caller name / CNAM, and
+  portability). Verify sends a one-time passcode over SMS, voice call, flash
+  call, or WhatsApp and checks the code the user enters - by verification ID or
+  by phone number - with reusable per-channel Verify Profiles and message
+  templates, plus verification webhooks and built-in anti-fraud controls
+  against SMS pumping and brute-force attacks. Number Lookup returns carrier and
+  caller data for an E.164 number for routing, validation, lead enrichment, and
+  fraud workflows. Both run on the Telnyx API v2 (https://api.telnyx.com/v2)
+  with Bearer API-key auth. This is a product-specific treatment of the parent
+  Telnyx cloud-communications (CPaaS) platform, whose full voice / messaging /
+  numbers / fax / wireless surface is documented in the `telnyx` catalog entry.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Number Verification
+- Phone Verification
+- OTP
+- 2FA
+- Lookup
+- Verify
+- Number Lookup
+- CNAM
+- Identity
+- Anti-Fraud
+created: '2026-07-11'
+modified: '2026-07-11'
+specificationVersion: '0.19'
+apis:
+- aid: telnyx-verify:telnyx-verify-verifications-api
+  name: Telnyx Verify Verifications API
+  tags:
+  - Number Verification
+  - Phone Verification
+  - OTP
+  - 2FA
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.telnyx.com/docs/identity/verify/quickstart
+  baseURL: https://api.telnyx.com/v2
+  properties:
+  - url: https://developers.telnyx.com/docs/identity/verify/quickstart
+    type: Documentation
+  - url: https://developers.telnyx.com/api/verify/trigger-verification
+    type: APIReference
+  - url: openapi/telnyx-verify-openapi.yml
+    type: OpenAPI
+  - url: collections/telnyx-verify.postman_collection.json
+    type: PostmanCollection
+  - url: collections/telnyx-verify.opencollection.json
+    type: OpenCollection
+  description: >-
+    Trigger and check one-time-passcode verifications. Send a code over SMS,
+    voice call, flash call, or WhatsApp (POST /verifications/sms, /call,
+    /flashcall, /whatsapp), then verify the code the user entered either by
+    verification ID (POST /verifications/{id}/actions/verify) or by phone number
+    (POST /verifications/by_phone_number/{phone_number}/actions/verify).
+    Retrieve a verification or list verifications for a phone number.
+- aid: telnyx-verify:telnyx-verify-profiles-api
+  name: Telnyx Verify Profiles API
+  tags:
+  - 2FA
+  - Profiles
+  - Templates
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.telnyx.com/docs/identity/verify/quickstart
+  baseURL: https://api.telnyx.com/v2
+  properties:
+  - url: https://developers.telnyx.com/docs/identity/verify/quickstart
+    type: Documentation
+  - url: https://developers.telnyx.com/api/verify/list-profiles
+    type: APIReference
+  - url: openapi/telnyx-verify-openapi.yml
+    type: OpenAPI
+  - url: collections/telnyx-verify.postman_collection.json
+    type: PostmanCollection
+  - url: collections/telnyx-verify.opencollection.json
+    type: OpenCollection
+  description: >-
+    Manage the reusable per-channel configuration applied when sending 2FA
+    messages. Create, list, retrieve, update, and delete Verify profiles
+    (/verify_profiles), which hold enabled channels, code length, timeouts,
+    webhook URLs, and app name, plus manage the message templates
+    (/verify_profiles/templates) that carry the verification code placeholder.
+- aid: telnyx-verify:telnyx-verify-number-lookup-api
+  name: Telnyx Number Lookup API
+  tags:
+  - Lookup
+  - Number Lookup
+  - CNAM
+  - Carrier
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.telnyx.com/docs/identity/number-lookup/quickstart
+  baseURL: https://api.telnyx.com/v2
+  properties:
+  - url: https://developers.telnyx.com/docs/identity/number-lookup/quickstart
+    type: Documentation
+  - url: https://developers.telnyx.com/api/number-lookup/lookup-number
+    type: APIReference
+  - url: openapi/telnyx-verify-openapi.yml
+    type: OpenAPI
+  - url: collections/telnyx-verify.postman_collection.json
+    type: PostmanCollection
+  - url: collections/telnyx-verify.opencollection.json
+    type: OpenCollection
+  description: >-
+    Number-intelligence lookup. A single GET /number_lookup/{phone_number}
+    returns carrier, line type, caller name (CNAM), and portability
+    (city/state) data for an E.164 phone number; the optional type query
+    parameter (carrier, caller-name) selects which sections are populated. Used
+    for routing, validation, lead enrichment, and anti-fraud workflows.
+common:
+- type: DomainSecurity
+  url: security/telnyx-verify-domain-security.yml
+- type: Authentication
+  url: authentication/telnyx-verify-authentication.yml
+- type: GitHubOrganization
+  url: https://github.com/team-telnyx
+- type: LinkedIn
+  url: https://www.linkedin.com/company/telnyx
+- type: Website
+  url: https://telnyx.com/products/verify-api
+- type: Documentation
+  url: https://developers.telnyx.com/docs/identity/verify/quickstart
+- type: Plans
+  url: plans/telnyx-verify-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/telnyx-verify-rate-limits.yml
+- type: FinOps
+  url: finops/telnyx-verify-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

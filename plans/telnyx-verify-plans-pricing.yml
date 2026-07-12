@@ -1,0 +1,126 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Telnyx Verify API
+providerId: telnyx-verify
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Number Verification
+- Phone Verification
+- OTP
+- 2FA
+- Lookup
+- Plans
+description: >-
+  Telnyx Verify and Number Lookup are pay-as-you-go, usage-metered products on
+  the Telnyx platform - there is no separate subscription for API access. Verify
+  is billed per successful verification, plus the underlying channel-delivery
+  cost (SMS, voice, flash call, or WhatsApp) for the message that carries the
+  code. Number Lookup is billed per lookup (per LRN dip). Volume/committed-use
+  discounts are available by contacting Telnyx. Rates below are grounded from
+  the public Telnyx pricing pages as of the created date and should be
+  reconciled before billing decisions.
+notes: >-
+  Telnyx Verify pricing is published as a per-successful-verification fee plus
+  separate channel costs; the channel costs follow Telnyx's standard Messaging
+  and Voice API rates (e.g. US outbound SMS around $0.004/message, outbound
+  voice around $0.007/min) and vary by destination. Number Lookup is priced per
+  dip. Confirm current rates on telnyx.com/pricing before relying on them.
+sources:
+- https://telnyx.com/pricing/verify-api
+- https://telnyx.com/products/verify-api
+- https://telnyx.com/products/number-lookup
+- https://telnyx.com/pricing
+plans:
+- id: telnyx-verify-payg
+  name: Verify - Pay As You Go
+  type: usage
+  description: >-
+    Usage-based two-factor authentication. Billed per successful verification
+    across any channel, on top of the channel-delivery cost for the SMS, voice
+    call, flash call, or WhatsApp message that delivers the code.
+  entries:
+  - label: Successful Verification
+    name: successful_verification
+    type: usage
+    metric: verifications
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0.03 per successful verification (plus channel delivery cost)
+    userMultiplied: false
+  - label: SMS Channel Delivery
+    name: sms_channel_delivery
+    type: usage
+    metric: messages
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: standard Telnyx SMS rate (about $0.004 per message, US; varies by destination)
+    userMultiplied: false
+  - label: Voice Channel Delivery
+    name: voice_channel_delivery
+    type: usage
+    metric: minutes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: standard Telnyx outbound voice rate (about $0.007 per minute, US; varies by destination)
+    userMultiplied: false
+  elements:
+  - name: SMS Verification
+  - name: Voice Call Verification
+  - name: Flash Call Verification
+  - name: WhatsApp Verification
+  - name: Verify Profiles and Templates
+  - name: Verification Webhooks
+- id: telnyx-number-lookup-payg
+  name: Number Lookup - Pay As You Go
+  type: usage
+  description: >-
+    Usage-based number intelligence. Billed per lookup (per LRN dip) returning
+    carrier, line type, caller-name (CNAM), and portability data.
+  entries:
+  - label: Number Lookup
+    name: number_lookup
+    type: usage
+    metric: lookups
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: from $0.0015 per lookup (LRN dip); CNAM caller-name may add cost
+    userMultiplied: false
+  elements:
+  - name: Carrier and Line Type
+  - name: Caller Name (CNAM)
+  - name: Portability City and State
+- id: telnyx-verify-volume
+  name: Volume / Committed Use
+  type: enterprise
+  description: >-
+    Discounted rates for higher-volume Verify and Number Lookup usage under a
+    monthly commitment or negotiated contract. Contact Telnyx.
+  entries:
+  - label: Committed Use Agreement
+    name: committed_use
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Discounted Per-Verification Rates
+  - name: Discounted Per-Lookup Rates
+  - name: Volume Commitments
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

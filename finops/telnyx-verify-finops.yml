@@ -1,0 +1,97 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Telnyx Verify API
+providerId: telnyx-verify
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Number Verification
+- Phone Verification
+- OTP
+- 2FA
+- Lookup
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Telnyx Verify and Number Lookup spend. Both are pay-as-you-go,
+  usage-metered products with no subscription floor. Verify cost is driven by
+  the number of successful verifications plus the channel-delivery cost (SMS,
+  voice, flash call, WhatsApp) of each code sent; failed or unattempted
+  verifications and the chosen channel mix therefore materially change unit
+  economics. Number Lookup cost is driven by the number of lookups (LRN dips),
+  with optional CNAM caller-name adding cost. Spend maps cleanly to product
+  events, so tagging by app, campaign, or workload is the primary lever.
+notes: >-
+  Per-unit rates are grounded from Telnyx public pricing as of the created date
+  ($0.03 per successful verification plus channel cost; Number Lookup from
+  $0.0015 per dip) but should be reconciled before budgeting. Channel-delivery
+  cost follows Telnyx Messaging/Voice rates and varies by destination country.
+sources:
+- https://telnyx.com/pricing/verify-api
+- https://telnyx.com/products/number-lookup
+- https://telnyx.com/pricing
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Telnyx
+serviceCategory: Identity and Communications
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Telnyx Verify
+  ServiceCategory: Identity and Communications
+  ProviderName: Telnyx
+  PublisherName: Telnyx
+  InvoiceIssuerName: Telnyx
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: successful_verifications
+  description: Successful verifications, billed per verification across channels.
+  unit: verifications
+  aggregation: sum
+  dimensions:
+  - account
+  - verify_profile
+  - channel
+- name: channel_delivery
+  description: SMS / voice / flash call / WhatsApp delivery cost for the message carrying the code.
+  unit: messages
+  aggregation: sum
+  dimensions:
+  - account
+  - channel
+  - destination_country
+- name: number_lookups
+  description: Number Lookup requests (LRN dips) returning carrier / caller-name / portability.
+  unit: lookups
+  aggregation: sum
+  dimensions:
+  - account
+  - lookup_type
+principles:
+- name: Visibility
+  description: Track verifications and lookups per app and campaign; separate the verification fee from channel-delivery cost so channel mix is visible.
+- name: Allocation
+  description: Use a Verify profile (and its name) per application or brand so verification and channel spend map to cost centers.
+- name: Optimization
+  description: Prefer lower-cost channels where UX allows (flash call vs SMS), cap resends, set sensible code-expiry timeouts, and only request CNAM caller-name on lookups when needed.
+- name: Accountability
+  description: Assign owners per Verify profile; review monthly verification and lookup volume against fraud/abuse baselines and budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

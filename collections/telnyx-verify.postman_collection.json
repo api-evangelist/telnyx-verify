@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "Telnyx Verify and Number Lookup API",
+    "description": "Telnyx Verify (2FA / OTP over SMS, call, flash call, WhatsApp), Verify Profiles, and Number Lookup (carrier / caller-name / portability intelligence). Base URL: https://api.telnyx.com/v2. All requests require a Bearer API key created in the Telnyx Mission Control Portal. Product-specific treatment of the parent Telnyx CPaaS platform.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{bearerToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.telnyx.com/v2", "type": "string" },
+    { "key": "bearerToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Verify",
+      "item": [
+        {
+          "name": "Trigger SMS verification",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"phone_number\": \"+15551234567\",\n  \"verify_profile_id\": \"\",\n  \"timeout_secs\": 300\n}" },
+            "url": { "raw": "{{baseUrl}}/verifications/sms", "host": ["{{baseUrl}}"], "path": ["verifications", "sms"] },
+            "description": "Sends a one-time verification code by SMS using the referenced Verify profile."
+          }
+        },
+        {
+          "name": "Trigger Call verification",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"phone_number\": \"+15551234567\",\n  \"verify_profile_id\": \"\",\n  \"timeout_secs\": 300\n}" },
+            "url": { "raw": "{{baseUrl}}/verifications/call", "host": ["{{baseUrl}}"], "path": ["verifications", "call"] },
+            "description": "Calls the number and reads the verification code aloud."
+          }
+        },
+        {
+          "name": "Trigger Flash call verification",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"phone_number\": \"+15551234567\",\n  \"verify_profile_id\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verifications/flashcall", "host": ["{{baseUrl}}"], "path": ["verifications", "flashcall"] },
+            "description": "Rings the number once; the code is conveyed via caller ID."
+          }
+        },
+        {
+          "name": "Trigger WhatsApp verification",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"phone_number\": \"+15551234567\",\n  \"verify_profile_id\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verifications/whatsapp", "host": ["{{baseUrl}}"], "path": ["verifications", "whatsapp"] },
+            "description": "Sends a one-time verification code over WhatsApp."
+          }
+        },
+        {
+          "name": "List verifications by phone number",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/verifications/by_phone_number/:phone_number", "host": ["{{baseUrl}}"], "path": ["verifications", "by_phone_number", ":phone_number"], "variable": [{ "key": "phone_number", "value": "+15551234567" }] },
+            "description": "Lists verifications for a given E.164 phone number."
+          }
+        },
+        {
+          "name": "Verify code by phone number",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"17686\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verifications/by_phone_number/:phone_number/actions/verify", "host": ["{{baseUrl}}"], "path": ["verifications", "by_phone_number", ":phone_number", "actions", "verify"], "variable": [{ "key": "phone_number", "value": "+15551234567" }] },
+            "description": "Submits the end-user code against the latest pending verification for the number."
+          }
+        },
+        {
+          "name": "Retrieve verification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/verifications/:verification_id", "host": ["{{baseUrl}}"], "path": ["verifications", ":verification_id"], "variable": [{ "key": "verification_id", "value": "" }] },
+            "description": "Retrieves a single verification by ID."
+          }
+        },
+        {
+          "name": "Verify code by ID",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"17686\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verifications/:verification_id/actions/verify", "host": ["{{baseUrl}}"], "path": ["verifications", ":verification_id", "actions", "verify"], "variable": [{ "key": "verification_id", "value": "" }] },
+            "description": "Submits the end-user code for a specific verification ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Verify Profiles",
+      "item": [
+        {
+          "name": "List all Verify profiles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/verify_profiles", "host": ["{{baseUrl}}"], "path": ["verify_profiles"] },
+            "description": "Lists Verify profiles in your account."
+          }
+        },
+        {
+          "name": "Create a Verify profile",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"My App 2FA\",\n  \"sms\": { \"default_verification_timeout_secs\": 300 }\n}" },
+            "url": { "raw": "{{baseUrl}}/verify_profiles", "host": ["{{baseUrl}}"], "path": ["verify_profiles"] },
+            "description": "Creates a Verify profile holding per-channel configuration."
+          }
+        },
+        {
+          "name": "Retrieve Verify profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/verify_profiles/:verify_profile_id", "host": ["{{baseUrl}}"], "path": ["verify_profiles", ":verify_profile_id"], "variable": [{ "key": "verify_profile_id", "value": "" }] },
+            "description": "Retrieves a single Verify profile by ID."
+          }
+        },
+        {
+          "name": "Update Verify profile",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"My App 2FA (updated)\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verify_profiles/:verify_profile_id", "host": ["{{baseUrl}}"], "path": ["verify_profiles", ":verify_profile_id"], "variable": [{ "key": "verify_profile_id", "value": "" }] },
+            "description": "Updates an existing Verify profile."
+          }
+        },
+        {
+          "name": "Delete Verify profile",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/verify_profiles/:verify_profile_id", "host": ["{{baseUrl}}"], "path": ["verify_profiles", ":verify_profile_id"], "variable": [{ "key": "verify_profile_id", "value": "" }] },
+            "description": "Deletes an existing Verify profile."
+          }
+        },
+        {
+          "name": "Retrieve Verify profile message templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/verify_profiles/templates", "host": ["{{baseUrl}}"], "path": ["verify_profiles", "templates"] },
+            "description": "Lists message templates available for Verify profiles."
+          }
+        },
+        {
+          "name": "Create message template",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Your {{app_name}} verification code is: {{code}}.\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verify_profiles/templates", "host": ["{{baseUrl}}"], "path": ["verify_profiles", "templates"] },
+            "description": "Creates a Verify profile message template."
+          }
+        },
+        {
+          "name": "Update message template",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Your {{app_name}} code is {{code}}.\"\n}" },
+            "url": { "raw": "{{baseUrl}}/verify_profiles/templates/:template_id", "host": ["{{baseUrl}}"], "path": ["verify_profiles", "templates", ":template_id"], "variable": [{ "key": "template_id", "value": "" }] },
+            "description": "Updates an existing message template."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Number Lookup",
+      "item": [
+        {
+          "name": "Lookup phone number data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/number_lookup/:phone_number?type=carrier", "host": ["{{baseUrl}}"], "path": ["number_lookup", ":phone_number"], "query": [{ "key": "type", "value": "carrier", "description": "carrier or caller-name" }], "variable": [{ "key": "phone_number", "value": "+15551234567" }] },
+            "description": "Returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 number."
+          }
+        }
+      ]
+    }
+  ]
+}

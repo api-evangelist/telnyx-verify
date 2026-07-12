@@ -1,0 +1,198 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telnyx Verify and Number Lookup API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Verify", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Trigger SMS verification", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/sms",
+            "body": { "type": "json", "data": "{\"phone_number\":\"+15551234567\",\"verify_profile_id\":\"\",\"timeout_secs\":300}" }
+          },
+          "docs": "Sends a one-time verification code by SMS using the referenced Verify profile."
+        },
+        {
+          "info": { "name": "Trigger Call verification", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/call",
+            "body": { "type": "json", "data": "{\"phone_number\":\"+15551234567\",\"verify_profile_id\":\"\",\"timeout_secs\":300}" }
+          },
+          "docs": "Calls the number and reads the verification code aloud."
+        },
+        {
+          "info": { "name": "Trigger Flash call verification", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/flashcall",
+            "body": { "type": "json", "data": "{\"phone_number\":\"+15551234567\",\"verify_profile_id\":\"\"}" }
+          },
+          "docs": "Rings the number once; the code is conveyed via caller ID."
+        },
+        {
+          "info": { "name": "Trigger WhatsApp verification", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/whatsapp",
+            "body": { "type": "json", "data": "{\"phone_number\":\"+15551234567\",\"verify_profile_id\":\"\"}" }
+          },
+          "docs": "Sends a one-time verification code over WhatsApp."
+        },
+        {
+          "info": { "name": "List verifications by phone number", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verifications/by_phone_number/:phone_number",
+            "params": [
+              { "name": "phone_number", "value": "+15551234567", "type": "path", "description": "E.164 phone number." }
+            ]
+          },
+          "docs": "Lists verifications for a given E.164 phone number."
+        },
+        {
+          "info": { "name": "Verify code by phone number", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/by_phone_number/:phone_number/actions/verify",
+            "params": [
+              { "name": "phone_number", "value": "+15551234567", "type": "path", "description": "E.164 phone number." }
+            ],
+            "body": { "type": "json", "data": "{\"code\":\"17686\"}" }
+          },
+          "docs": "Submits the end-user code against the latest pending verification for the number."
+        },
+        {
+          "info": { "name": "Retrieve verification", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verifications/:verification_id",
+            "params": [
+              { "name": "verification_id", "value": "", "type": "path", "description": "Verification ID." }
+            ]
+          },
+          "docs": "Retrieves a single verification by ID."
+        },
+        {
+          "info": { "name": "Verify code by ID", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/:verification_id/actions/verify",
+            "params": [
+              { "name": "verification_id", "value": "", "type": "path", "description": "Verification ID." }
+            ],
+            "body": { "type": "json", "data": "{\"code\":\"17686\"}" }
+          },
+          "docs": "Submits the end-user code for a specific verification ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Verify Profiles", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List all Verify profiles", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.telnyx.com/v2/verify_profiles" },
+          "docs": "Lists Verify profiles in your account."
+        },
+        {
+          "info": { "name": "Create a Verify profile", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verify_profiles",
+            "body": { "type": "json", "data": "{\"name\":\"My App 2FA\",\"sms\":{\"default_verification_timeout_secs\":300}}" }
+          },
+          "docs": "Creates a Verify profile holding per-channel configuration."
+        },
+        {
+          "info": { "name": "Retrieve Verify profile", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verify_profiles/:verify_profile_id",
+            "params": [
+              { "name": "verify_profile_id", "value": "", "type": "path", "description": "Verify profile ID." }
+            ]
+          },
+          "docs": "Retrieves a single Verify profile by ID."
+        },
+        {
+          "info": { "name": "Update Verify profile", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.telnyx.com/v2/verify_profiles/:verify_profile_id",
+            "params": [
+              { "name": "verify_profile_id", "value": "", "type": "path", "description": "Verify profile ID." }
+            ],
+            "body": { "type": "json", "data": "{\"name\":\"My App 2FA (updated)\"}" }
+          },
+          "docs": "Updates an existing Verify profile."
+        },
+        {
+          "info": { "name": "Delete Verify profile", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.telnyx.com/v2/verify_profiles/:verify_profile_id",
+            "params": [
+              { "name": "verify_profile_id", "value": "", "type": "path", "description": "Verify profile ID." }
+            ]
+          },
+          "docs": "Deletes an existing Verify profile."
+        },
+        {
+          "info": { "name": "Retrieve Verify profile message templates", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.telnyx.com/v2/verify_profiles/templates" },
+          "docs": "Lists message templates available for Verify profiles."
+        },
+        {
+          "info": { "name": "Create message template", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verify_profiles/templates",
+            "body": { "type": "json", "data": "{\"text\":\"Your app verification code is: {{code}}.\"}" }
+          },
+          "docs": "Creates a Verify profile message template."
+        },
+        {
+          "info": { "name": "Update message template", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.telnyx.com/v2/verify_profiles/templates/:template_id",
+            "params": [
+              { "name": "template_id", "value": "", "type": "path", "description": "Message template ID." }
+            ],
+            "body": { "type": "json", "data": "{\"text\":\"Your app code is {{code}}.\"}" }
+          },
+          "docs": "Updates an existing message template."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Number Lookup", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Lookup phone number data", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/number_lookup/:phone_number?type=carrier",
+            "params": [
+              { "name": "phone_number", "value": "+15551234567", "type": "path", "description": "E.164 phone number." },
+              { "name": "type", "value": "carrier", "type": "query", "description": "carrier or caller-name." }
+            ]
+          },
+          "docs": "Returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 number."
+        }
+      ]
+    }
+  ]
+}
