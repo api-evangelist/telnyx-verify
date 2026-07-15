@@ -114,6 +114,8 @@ apis:
     parameter (carrier, caller-name) selects which sections are populated. Used
     for routing, validation, lead enrichment, and anti-fraud workflows.
 common:
+- type: AgenticAccess
+  url: agentic-access/telnyx-verify-agentic-access.yml
 - type: DomainSecurity
   url: security/telnyx-verify-domain-security.yml
 - type: Authentication
