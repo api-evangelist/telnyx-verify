@@ -9,7 +9,7 @@ schemes:
   type: http
   scheme: bearer
   bearerFormat: API key
-  description: 'Telnyx API v2 key passed as `Authorization: Bearer YOUR_API_KEY`. Create
+  description: 'Telnyx API v2 key passed as `Authorization: Bearer [example key]`. Create
     and manage keys in the Telnyx Mission Control Portal under Auth / API Keys
     (portal.telnyx.com). The same key authenticates Verify, Verify Profiles, and
     Number Lookup as well as the rest of the Telnyx API v2 surface.'
