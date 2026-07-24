@@ -1,0 +1,289 @@
+openapi: 3.0.3
+info:
+  title: Telnyx Verify and Number Lookup Verify Profiles API
+  description: 'The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.
+
+    Verify sends a one-time passcode (OTP) over SMS, voice call, flash call, or WhatsApp, then verifies the code the end user enters - either by verification ID or by phone number. Verify Profiles hold the reusable per-channel configuration (which methods are enabled, code length, timeout, templates, app name) applied when sending 2FA messages. Number Lookup returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 phone number, for use in routing, validation, lead enrichment, and anti-fraud workflows.
+
+    This is a product-specific treatment. The parent company `telnyx` catalog entry documents the full Telnyx voice / messaging / numbers / fax / wireless surface; this entry isolates the Verify + Number Lookup identity endpoints.
+
+    Endpoints, methods, the single API v2 server, and Bearer auth are grounded in the official Telnyx OpenAPI specification (github.com/team-telnyx/openapi). Request/response schema bodies here are summarized rather than fully mirrored; treat the published Telnyx spec as authoritative for field-level detail.'
+  version: 2.0.0
+  contact:
+    name: Telnyx Developers
+    url: https://developers.telnyx.com
+  license:
+    name: Telnyx Terms of Service
+    url: https://telnyx.com/terms-and-conditions
+servers:
+- url: https://api.telnyx.com/v2
+  description: Telnyx API v2
+security:
+- bearerAuth: []
+tags:
+- name: Verify Profiles
+  description: Reusable per-channel verification configuration and message templates.
+paths:
+  /verify_profiles:
+    get:
+      operationId: listVerifyProfiles
+      tags:
+      - Verify Profiles
+      summary: List all Verify profiles
+      description: Lists the Verify profiles in your account.
+      responses:
+        '200':
+          description: A list of Verify profiles.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VerifyProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createVerifyProfile
+      tags:
+      - Verify Profiles
+      summary: Create a Verify profile
+      description: Creates a Verify profile holding the per-channel configuration (SMS, call, flash call, WhatsApp) applied when sending 2FA messages.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyProfile'
+      responses:
+        '200':
+          description: The created Verify profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verify_profiles/{verify_profile_id}:
+    get:
+      operationId: retrieveVerifyProfile
+      tags:
+      - Verify Profiles
+      summary: Retrieve Verify profile
+      description: Retrieves a single Verify profile by ID.
+      parameters:
+      - $ref: '#/components/parameters/VerifyProfileIdPath'
+      responses:
+        '200':
+          description: The Verify profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateVerifyProfile
+      tags:
+      - Verify Profiles
+      summary: Update Verify profile
+      description: Updates the configuration of an existing Verify profile.
+      parameters:
+      - $ref: '#/components/parameters/VerifyProfileIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyProfile'
+      responses:
+        '200':
+          description: The updated Verify profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteVerifyProfile
+      tags:
+      - Verify Profiles
+      summary: Delete Verify profile
+      description: Deletes an existing Verify profile.
+      parameters:
+      - $ref: '#/components/parameters/VerifyProfileIdPath'
+      responses:
+        '200':
+          description: The deleted Verify profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /verify_profiles/templates:
+    get:
+      operationId: listVerifyProfileTemplates
+      tags:
+      - Verify Profiles
+      summary: Retrieve Verify profile message templates
+      description: Lists the message templates available for Verify profiles.
+      responses:
+        '200':
+          description: A list of message templates.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VerifyProfileMessageTemplate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createVerifyProfileTemplate
+      tags:
+      - Verify Profiles
+      summary: Create message template
+      description: Creates a message template that can be referenced by Verify profiles. The template text must contain the verification code placeholder.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyProfileMessageTemplate'
+      responses:
+        '200':
+          description: The created message template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyProfileMessageTemplate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verify_profiles/templates/{template_id}:
+    patch:
+      operationId: updateVerifyProfileTemplate
+      tags:
+      - Verify Profiles
+      summary: Update message template
+      description: Updates the text of an existing Verify profile message template.
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The identifier of the message template.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyProfileMessageTemplate'
+      responses:
+        '200':
+          description: The updated message template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyProfileMessageTemplate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  schemas:
+    VerifyProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: Human-friendly name for the Verify profile.
+        webhook_url:
+          type: string
+          description: URL that receives verification webhooks.
+        webhook_failover_url:
+          type: string
+        sms:
+          type: object
+          description: SMS channel configuration (enabled, default_verification_timeout_secs, whitelisted_destinations, etc.).
+        call:
+          type: object
+          description: Voice call channel configuration.
+        flashcall:
+          type: object
+          description: Flash call channel configuration.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    VerifyProfileMessageTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          description: Template body; must contain the verification code placeholder.
+          example: 'Your {{app_name}} verification code is: {{code}}.'
+  parameters:
+    VerifyProfileIdPath:
+      name: verify_profile_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The identifier of the Verify profile.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
+      description: 'Telnyx API v2 key passed as `Authorization: Bearer YOUR_API_KEY`. Create keys in the Telnyx Mission Control Portal under Auth / API Keys.'

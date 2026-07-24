@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+  title: Telnyx Verify and Number Lookup API
+  description: 'The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.
+
+    Verify sends a one-time passcode (OTP) over SMS, voice call, flash call, or WhatsApp, then verifies the code the end user enters - either by verification ID or by phone number. Verify Profiles hold the reusable per-channel configuration (which methods are enabled, code length, timeout, templates, app name) applied when sending 2FA messages. Number Lookup returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 phone number, for use in routing, validation, lead enrichment, and anti-fraud workflows.
+
+    This is a product-specific treatment. The parent company `telnyx` catalog entry documents the full Telnyx voice / messaging / numbers / fax / wireless surface; this entry isolates the Verify + Number Lookup identity endpoints.
+
+    Endpoints, methods, the single API v2 server, and Bearer auth are grounded in the official Telnyx OpenAPI specification (github.com/team-telnyx/openapi). Request/response schema bodies here are summarized rather than fully mirrored; treat the published Telnyx spec as authoritative for field-level detail.'
+  version: 2.0.0
+  contact:
+    name: Telnyx Developers
+    url: https://developers.telnyx.com
+  license:
+    name: Telnyx Terms of Service
+    url: https://telnyx.com/terms-and-conditions
+servers:
+- url: https://api.telnyx.com/v2
+  description: Telnyx API v2
+security:
+- bearerAuth: []
+tags:
+- name: Number Lookup
+  description: Carrier, caller-name (CNAM), and portability intelligence for a phone number.
+paths:
+  /number_lookup/{phone_number}:
+    get:
+      operationId: lookupNumber
+      tags:
+      - Number Lookup
+      summary: Lookup phone number data
+      description: Returns number-intelligence data for the provided E.164 phone number. Without a `type` value the base object is returned; request `carrier` and/or `caller-name` to populate those sections (carrier, line type, CNAM caller name, portability city/state).
+      parameters:
+      - $ref: '#/components/parameters/PhoneNumberPath'
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - carrier
+          - caller-name
+        description: Specifies the type of number lookup to perform. May be repeated to request both carrier and caller-name data.
+      responses:
+        '200':
+          description: Number lookup data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NumberLookupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  parameters:
+    PhoneNumberPath:
+      name: phone_number
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The phone number in E.164 format, e.g. +15551234567.
+  schemas:
+    NumberLookupResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            country_code:
+              type: string
+            phone_number:
+              type: string
+            national_format:
+              type: string
+            fraud:
+              type: string
+              nullable: true
+            portability:
+              type: object
+              nullable: true
+              description: Portability data including city and state.
+            caller_name:
+              type: object
+              nullable: true
+              description: CNAM caller-name data (null unless caller-name requested).
+            carrier:
+              type: object
+              nullable: true
+              description: Carrier and line-type data (null unless carrier requested).
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
+      description: 'Telnyx API v2 key passed as `Authorization: Bearer YOUR_API_KEY`. Create keys in the Telnyx Mission Control Portal under Auth / API Keys.'

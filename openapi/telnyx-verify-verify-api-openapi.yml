@@ -1,0 +1,342 @@
+openapi: 3.0.3
+info:
+  title: Telnyx and Number Lookup Verify API
+  description: 'The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.
+
+    Verify sends a one-time passcode (OTP) over SMS, voice call, flash call, or WhatsApp, then verifies the code the end user enters - either by verification ID or by phone number. Verify Profiles hold the reusable per-channel configuration (which methods are enabled, code length, timeout, templates, app name) applied when sending 2FA messages. Number Lookup returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 phone number, for use in routing, validation, lead enrichment, and anti-fraud workflows.
+
+    This is a product-specific treatment. The parent company `telnyx` catalog entry documents the full Telnyx voice / messaging / numbers / fax / wireless surface; this entry isolates the Verify + Number Lookup identity endpoints.
+
+    Endpoints, methods, the single API v2 server, and Bearer auth are grounded in the official Telnyx OpenAPI specification (github.com/team-telnyx/openapi). Request/response schema bodies here are summarized rather than fully mirrored; treat the published Telnyx spec as authoritative for field-level detail.'
+  version: 2.0.0
+  contact:
+    name: Telnyx Developers
+    url: https://developers.telnyx.com
+  license:
+    name: Telnyx Terms of Service
+    url: https://telnyx.com/terms-and-conditions
+servers:
+- url: https://api.telnyx.com/v2
+  description: Telnyx API v2
+security:
+- bearerAuth: []
+tags:
+- name: Verify
+  description: Trigger and check OTP / 2FA verifications over SMS, call, flash call, and WhatsApp.
+paths:
+  /verifications/sms:
+    post:
+      operationId: createVerificationSms
+      tags:
+      - Verify
+      summary: Trigger SMS verification
+      description: Sends a one-time verification code to the target phone number by SMS, using the SMS channel configured on the referenced Verify profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerVerificationRequest'
+      responses:
+        '200':
+          description: Verification created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verifications/call:
+    post:
+      operationId: createVerificationCall
+      tags:
+      - Verify
+      summary: Trigger Call verification
+      description: Places a voice call to the target phone number and reads the one-time verification code aloud, using the call channel on the Verify profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerVerificationRequest'
+      responses:
+        '200':
+          description: Verification created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verifications/flashcall:
+    post:
+      operationId: createVerificationFlashcall
+      tags:
+      - Verify
+      summary: Trigger Flash call verification
+      description: Triggers a brief "flash" call that rings the target number once and hangs up; the verification code is conveyed via the caller ID. Requires the flash call channel on the Verify profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerVerificationRequest'
+      responses:
+        '200':
+          description: Verification created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verifications/whatsapp:
+    post:
+      operationId: createVerificationWhatsapp
+      tags:
+      - Verify
+      summary: Trigger WhatsApp verification
+      description: Sends a one-time verification code to the target phone number over WhatsApp, using the WhatsApp channel on the Verify profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerVerificationRequest'
+      responses:
+        '200':
+          description: Verification created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verifications/by_phone_number/{phone_number}:
+    get:
+      operationId: listVerificationsByPhoneNumber
+      tags:
+      - Verify
+      summary: List verifications by phone number
+      description: Lists verifications for the given E.164 phone number.
+      parameters:
+      - $ref: '#/components/parameters/PhoneNumberPath'
+      responses:
+        '200':
+          description: A list of verifications.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VerificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /verifications/by_phone_number/{phone_number}/actions/verify:
+    post:
+      operationId: verifyByPhoneNumber
+      tags:
+      - Verify
+      summary: Verify verification code by phone number
+      description: Submits the code the end user entered, matched against the most recent pending verification for the given phone number.
+      parameters:
+      - $ref: '#/components/parameters/PhoneNumberPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyCodeRequest'
+      responses:
+        '200':
+          description: Verification result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResultResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /verifications/{verification_id}:
+    get:
+      operationId: retrieveVerification
+      tags:
+      - Verify
+      summary: Retrieve verification
+      description: Retrieves a single verification by its ID.
+      parameters:
+      - name: verification_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The identifier of the verification.
+      responses:
+        '200':
+          description: The verification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /verifications/{verification_id}/actions/verify:
+    post:
+      operationId: verifyById
+      tags:
+      - Verify
+      summary: Verify verification code by ID
+      description: Submits the code the end user entered for a specific verification ID.
+      parameters:
+      - name: verification_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The identifier of the verification.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyCodeRequest'
+      responses:
+        '200':
+          description: Verification result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyResultResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    VerifyCodeRequest:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          description: The verification code entered by the end user.
+          example: '17686'
+        verify_profile_id:
+          type: string
+          format: uuid
+          description: Optional Verify profile scope when verifying by phone number.
+    VerificationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            phone_number:
+              type: string
+            type:
+              type: string
+              enum:
+              - sms
+              - call
+              - flashcall
+              - whatsapp
+            verify_profile_id:
+              type: string
+              format: uuid
+            status:
+              type: string
+              enum:
+              - pending
+              - accepted
+              - expired
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    VerifyResultResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            phone_number:
+              type: string
+            response_code:
+              type: string
+              enum:
+              - accepted
+              - rejected
+              description: Whether the submitted code was accepted or rejected.
+    TriggerVerificationRequest:
+      type: object
+      required:
+      - phone_number
+      - verify_profile_id
+      properties:
+        phone_number:
+          type: string
+          description: The receiving phone number in E.164 format.
+          example: '+15551234567'
+        verify_profile_id:
+          type: string
+          format: uuid
+          description: The Verify profile whose channel configuration should be used.
+        timeout_secs:
+          type: integer
+          description: Seconds before the verification code expires.
+          example: 300
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  parameters:
+    PhoneNumberPath:
+      name: phone_number
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The phone number in E.164 format, e.g. +15551234567.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
+      description: 'Telnyx API v2 key passed as `Authorization: Bearer YOUR_API_KEY`. Create keys in the Telnyx Mission Control Portal under Auth / API Keys.'
