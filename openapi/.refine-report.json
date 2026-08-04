@@ -1,0 +1,18 @@
+{
+  "provider": "telnyx-verify",
+  "sources": [
+    "telnyx-verify-number-lookup-api-openapi.yml",
+    "telnyx-verify-verify-api-openapi.yml",
+    "telnyx-verify-verify-profiles-api-openapi.yml"
+  ],
+  "outputs": [
+    "telnyx-verify-number-lookup-api-openapi.yml",
+    "telnyx-verify-verify-api-openapi.yml",
+    "telnyx-verify-verify-profiles-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
