@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telnyx Verify and Number Lookup API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Number Lookup",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Lookup phone number data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/number_lookup/:phone_number",
+            "params": [
+              {
+                "name": "phone_number",
+                "value": "",
+                "type": "path",
+                "description": "The phone number in E.164 format, e.g. +15551234567."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the type of number lookup to perform. May be repeated to request both carrier and caller-name data."
+              }
+            ]
+          },
+          "docs": "Returns number-intelligence data for the provided E.164 phone number. Without a `type` value the base object is returned; request `carrier` and/or `caller-name` to populate those sections (carrier, line type, CNAM caller name, portability city/state)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

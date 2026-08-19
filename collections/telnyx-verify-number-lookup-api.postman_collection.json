@@ -1,0 +1,263 @@
+{
+  "item": [
+    {
+      "id": "541ceeee-30d8-4ce2-b092-933a6428238d",
+      "name": "Number Lookup",
+      "description": {
+        "content": "Carrier, caller-name (CNAM), and portability intelligence for a phone number.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "575fffd5-c8b1-4ebb-9c3a-d56fe9edf255",
+          "name": "Lookup phone number data",
+          "request": {
+            "name": "Lookup phone number data",
+            "description": {
+              "content": "Returns number-intelligence data for the provided E.164 phone number. Without a `type` value the base object is returned; request `carrier` and/or `caller-name` to populate those sections (carrier, line type, CNAM caller name, portability city/state).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "number_lookup",
+                ":phone_number"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Specifies the type of number lookup to perform. May be repeated to request both carrier and caller-name data."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "phone_number",
+                  "description": "(Required) The phone number in E.164 format, e.g. +15551234567."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4eb9a79b-412d-4e3e-9888-51e945722607",
+              "name": "Number lookup data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "number_lookup",
+                    ":phone_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "phone_number",
+                      "description": "(Required) The phone number in E.164 format, e.g. +15551234567."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"country_code\": \"string\",\n    \"phone_number\": \"string\",\n    \"national_format\": \"string\",\n    \"fraud\": \"string\",\n    \"portability\": {},\n    \"caller_name\": {},\n    \"carrier\": {}\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea5a6060-9acc-451b-9d90-c7297f6a93d3",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "number_lookup",
+                    ":phone_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "phone_number",
+                      "description": "(Required) The phone number in E.164 format, e.g. +15551234567."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"code\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c651a1c8-15ac-491b-aeec-2869c7c70c71",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "number_lookup",
+                    ":phone_number"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "phone_number",
+                      "description": "(Required) The phone number in E.164 format, e.g. +15551234567."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"code\": \"string\",\n      \"title\": \"string\",\n      \"detail\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.telnyx.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6841dbab-6604-47c0-81a4-a0e00e24ca91",
+    "name": "Telnyx Verify and Number Lookup API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.\nVerify sends a one-time passcode (OTP) over SMS, voice call, flash call, or WhatsApp, then verifies the code the end user enters - either by verification ID or by phone number. Verify Profiles hold the reusable per-channel configuration (which methods are enabled, code length, timeout, templates, app name) applied when sending 2FA messages. Number Lookup returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 phone number, for use in routing, validation, lead enrichment, and anti-fraud workflows.\nThis is a product-specific treatment. The parent company `telnyx` catalog entry documents the full Telnyx voice / messaging / numbers / fax / wireless surface; this entry isolates the Verify + Number Lookup identity endpoints.\nEndpoints, methods, the single API v2 server, and Bearer auth are grounded in the official Telnyx OpenAPI specification (github.com/team-telnyx/openapi). Request/response schema bodies here are summarized rather than fully mirrored; treat the published Telnyx spec as authoritative for field-level detail.\n\nContact Support:\n Name: Telnyx Developers",
+      "type": "text/plain"
+    }
+  }
+}

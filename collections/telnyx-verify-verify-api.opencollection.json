@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telnyx and Number Lookup Verify API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Verify",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Trigger SMS verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/sms",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends a one-time verification code to the target phone number by SMS, using the SMS channel configured on the referenced Verify profile."
+        },
+        {
+          "info": {
+            "name": "Trigger Call verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/call",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Places a voice call to the target phone number and reads the one-time verification code aloud, using the call channel on the Verify profile."
+        },
+        {
+          "info": {
+            "name": "Trigger Flash call verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/flashcall",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Triggers a brief \"flash\" call that rings the target number once and hangs up; the verification code is conveyed via the caller ID. Requires the flash call channel on the Verify profile."
+        },
+        {
+          "info": {
+            "name": "Trigger WhatsApp verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/whatsapp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends a one-time verification code to the target phone number over WhatsApp, using the WhatsApp channel on the Verify profile."
+        },
+        {
+          "info": {
+            "name": "List verifications by phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verifications/by_phone_number/:phone_number",
+            "params": [
+              {
+                "name": "phone_number",
+                "value": "",
+                "type": "path",
+                "description": "The phone number in E.164 format, e.g. +15551234567."
+              }
+            ]
+          },
+          "docs": "Lists verifications for the given E.164 phone number."
+        },
+        {
+          "info": {
+            "name": "Verify verification code by phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/by_phone_number/:phone_number/actions/verify",
+            "params": [
+              {
+                "name": "phone_number",
+                "value": "",
+                "type": "path",
+                "description": "The phone number in E.164 format, e.g. +15551234567."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submits the code the end user entered, matched against the most recent pending verification for the given phone number."
+        },
+        {
+          "info": {
+            "name": "Retrieve verification",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verifications/:verification_id",
+            "params": [
+              {
+                "name": "verification_id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the verification."
+              }
+            ]
+          },
+          "docs": "Retrieves a single verification by its ID."
+        },
+        {
+          "info": {
+            "name": "Verify verification code by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verifications/:verification_id/actions/verify",
+            "params": [
+              {
+                "name": "verification_id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the verification."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submits the code the end user entered for a specific verification ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

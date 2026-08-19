@@ -1,0 +1,160 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telnyx Verify and Number Lookup Verify Profiles API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Verify Profiles",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Verify profiles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verify_profiles"
+          },
+          "docs": "Lists the Verify profiles in your account."
+        },
+        {
+          "info": {
+            "name": "Create a Verify profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verify_profiles",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a Verify profile holding the per-channel configuration (SMS, call, flash call, WhatsApp) applied when sending 2FA messages."
+        },
+        {
+          "info": {
+            "name": "Retrieve Verify profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verify_profiles/:verify_profile_id",
+            "params": [
+              {
+                "name": "verify_profile_id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the Verify profile."
+              }
+            ]
+          },
+          "docs": "Retrieves a single Verify profile by ID."
+        },
+        {
+          "info": {
+            "name": "Update Verify profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.telnyx.com/v2/verify_profiles/:verify_profile_id",
+            "params": [
+              {
+                "name": "verify_profile_id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the Verify profile."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the configuration of an existing Verify profile."
+        },
+        {
+          "info": {
+            "name": "Delete Verify profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.telnyx.com/v2/verify_profiles/:verify_profile_id",
+            "params": [
+              {
+                "name": "verify_profile_id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the Verify profile."
+              }
+            ]
+          },
+          "docs": "Deletes an existing Verify profile."
+        },
+        {
+          "info": {
+            "name": "Retrieve Verify profile message templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.telnyx.com/v2/verify_profiles/templates"
+          },
+          "docs": "Lists the message templates available for Verify profiles."
+        },
+        {
+          "info": {
+            "name": "Create message template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.telnyx.com/v2/verify_profiles/templates",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a message template that can be referenced by Verify profiles. The template text must contain the verification code placeholder."
+        },
+        {
+          "info": {
+            "name": "Update message template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.telnyx.com/v2/verify_profiles/templates/:template_id",
+            "params": [
+              {
+                "name": "template_id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the message template."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the text of an existing Verify profile message template."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
