@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Telnyx Verify and Number Lookup API
+  title: Telnyx Verify Number Lookup API
   description: 'The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.
 
     Verify sends a one-time passcode (OTP) over SMS, voice call, flash call, or WhatsApp, then verifies the code the end user enters - either by verification ID or by phone number. Verify Profiles hold the reusable per-channel configuration (which methods are enabled, code length, timeout, templates, app name) applied when sending 2FA messages. Number Lookup returns carrier, line-type, caller-name (CNAM), and portability data for an E.164 phone number, for use in routing, validation, lead enrichment, and anti-fraud workflows.
@@ -54,6 +54,14 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    PhoneNumberPath:
+      name: phone_number
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The phone number in E.164 format, e.g. +15551234567.
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -67,42 +75,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
-  parameters:
-    PhoneNumberPath:
-      name: phone_number
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The phone number in E.164 format, e.g. +15551234567.
   schemas:
-    NumberLookupResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            country_code:
-              type: string
-            phone_number:
-              type: string
-            national_format:
-              type: string
-            fraud:
-              type: string
-              nullable: true
-            portability:
-              type: object
-              nullable: true
-              description: Portability data including city and state.
-            caller_name:
-              type: object
-              nullable: true
-              description: CNAM caller-name data (null unless caller-name requested).
-            carrier:
-              type: object
-              nullable: true
-              description: Carrier and line-type data (null unless carrier requested).
     Errors:
       type: object
       properties:
@@ -117,6 +90,37 @@ components:
                 type: string
               detail:
                 type: string
+    NumberLookupResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            country_code:
+              type: string
+            phone_number:
+              type: string
+            national_format:
+              type: string
+            fraud:
+              type:
+              - string
+              - 'null'
+            portability:
+              type:
+              - object
+              - 'null'
+              description: Portability data including city and state.
+            caller_name:
+              type:
+              - object
+              - 'null'
+              description: CNAM caller-name data (null unless caller-name requested).
+            carrier:
+              type:
+              - object
+              - 'null'
+              description: Carrier and line-type data (null unless carrier requested).
   securitySchemes:
     bearerAuth:
       type: http

@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Telnyx Verify and Number Lookup Verify Profiles API
   description: 'The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.
@@ -218,7 +218,30 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
+  parameters:
+    VerifyProfileIdPath:
+      name: verify_profile_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The identifier of the Verify profile.
   schemas:
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
     VerifyProfile:
       type: object
       properties:
@@ -248,20 +271,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
     VerifyProfileMessageTemplate:
       type: object
       properties:
@@ -272,15 +281,6 @@ components:
           type: string
           description: Template body; must contain the verification code placeholder.
           example: 'Your {{app_name}} verification code is: {{code}}.'
-  parameters:
-    VerifyProfileIdPath:
-      name: verify_profile_id
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      description: The identifier of the Verify profile.
   securitySchemes:
     bearerAuth:
       type: http

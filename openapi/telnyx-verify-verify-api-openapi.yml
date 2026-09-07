@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Telnyx and Number Lookup Verify API
   description: 'The Telnyx Verify API is a two-factor authentication (2FA) and phone-number verification service, and Telnyx Number Lookup is a number-intelligence (carrier / caller-name / portability) service. Both are products of Telnyx, the private-IP cloud communications (CPaaS) platform, and both run on the same Telnyx API v2 base (https://api.telnyx.com/v2) with Bearer API-key authentication.
@@ -220,20 +220,56 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    PhoneNumberPath:
+      name: phone_number
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The phone number in E.164 format, e.g. +15551234567.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   schemas:
-    VerifyCodeRequest:
+    Errors:
       type: object
-      required:
-      - code
       properties:
-        code:
-          type: string
-          description: The verification code entered by the end user.
-          example: '17686'
-        verify_profile_id:
-          type: string
-          format: uuid
-          description: Optional Verify profile scope when verifying by phone number.
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    VerifyResultResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            phone_number:
+              type: string
+            response_code:
+              type: string
+              enum:
+              - accepted
+              - rejected
+              description: Whether the submitted code was accepted or rejected.
     VerificationResponse:
       type: object
       properties:
@@ -267,34 +303,19 @@ components:
             updated_at:
               type: string
               format: date-time
-    Errors:
+    VerifyCodeRequest:
       type: object
+      required:
+      - code
       properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-    VerifyResultResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            phone_number:
-              type: string
-            response_code:
-              type: string
-              enum:
-              - accepted
-              - rejected
-              description: Whether the submitted code was accepted or rejected.
+        code:
+          type: string
+          description: The verification code entered by the end user.
+          example: '17686'
+        verify_profile_id:
+          type: string
+          format: uuid
+          description: Optional Verify profile scope when verifying by phone number.
     TriggerVerificationRequest:
       type: object
       required:
@@ -313,27 +334,6 @@ components:
           type: integer
           description: Seconds before the verification code expires.
           example: 300
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-  parameters:
-    PhoneNumberPath:
-      name: phone_number
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The phone number in E.164 format, e.g. +15551234567.
   securitySchemes:
     bearerAuth:
       type: http
