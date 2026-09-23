@@ -1,9 +1,7 @@
 {
   "provider": "telnyx-verify",
   "sources": [
-    "telnyx-verify-number-lookup-api-openapi.yml",
-    "telnyx-verify-verify-api-openapi.yml",
-    "telnyx-verify-verify-profiles-api-openapi.yml"
+    "_original/telnyx-verify-openapi.yml"
   ],
   "outputs": [
     "telnyx-verify-number-lookup-api-openapi.yml",
@@ -14,10 +12,13 @@
   "errors": [],
   "warnings": [],
   "notes": [
-    "telnyx-verify-number-lookup-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "telnyx-verify-verify-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "telnyx-verify-verify-profiles-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "telnyx-verify-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "telnyx-verify-number-lookup-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telnyx-verify-verify-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telnyx-verify-verify-profiles-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
