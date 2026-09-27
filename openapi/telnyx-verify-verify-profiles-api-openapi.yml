@@ -253,15 +253,6 @@ components:
                 type: string
               detail:
                 type: string
-  parameters:
-    VerifyProfileIdPath:
-      name: verify_profile_id
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      description: The identifier of the Verify profile.
   responses:
     Unauthorized:
       description: Missing or invalid API key.
@@ -275,6 +266,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
+  parameters:
+    VerifyProfileIdPath:
+      name: verify_profile_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The identifier of the Verify profile.
   securitySchemes:
     bearerAuth:
       type: http

@@ -48,7 +48,42 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    PhoneNumberPath:
+      name: phone_number
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The phone number in E.164 format, e.g. +15551234567.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   schemas:
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
     NumberLookupResponse:
       type: object
       properties:
@@ -80,41 +115,6 @@ components:
               - object
               - 'null'
               description: Carrier and line-type data (null unless carrier requested).
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-  parameters:
-    PhoneNumberPath:
-      name: phone_number
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The phone number in E.164 format, e.g. +15551234567.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
   securitySchemes:
     bearerAuth:
       type: http
