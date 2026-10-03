@@ -223,6 +223,38 @@ components:
         type: string
       description: The phone number in E.164 format, e.g. +15551234567.
   schemas:
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    TriggerVerificationRequest:
+      type: object
+      required:
+      - phone_number
+      - verify_profile_id
+      properties:
+        phone_number:
+          type: string
+          description: The receiving phone number in E.164 format.
+          example: '+15551234567'
+        verify_profile_id:
+          type: string
+          format: uuid
+          description: The Verify profile whose channel configuration should be used.
+        timeout_secs:
+          type: integer
+          description: Seconds before the verification code expires.
+          example: 300
     VerifyCodeRequest:
       type: object
       required:
@@ -236,6 +268,20 @@ components:
           type: string
           format: uuid
           description: Optional Verify profile scope when verifying by phone number.
+    VerifyResultResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            phone_number:
+              type: string
+            response_code:
+              type: string
+              enum:
+              - accepted
+              - rejected
+              description: Whether the submitted code was accepted or rejected.
     VerificationResponse:
       type: object
       properties:
@@ -269,61 +315,15 @@ components:
             updated_at:
               type: string
               format: date-time
-    VerifyResultResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            phone_number:
-              type: string
-            response_code:
-              type: string
-              enum:
-              - accepted
-              - rejected
-              description: Whether the submitted code was accepted or rejected.
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-    TriggerVerificationRequest:
-      type: object
-      required:
-      - phone_number
-      - verify_profile_id
-      properties:
-        phone_number:
-          type: string
-          description: The receiving phone number in E.164 format.
-          example: '+15551234567'
-        verify_profile_id:
-          type: string
-          format: uuid
-          description: The Verify profile whose channel configuration should be used.
-        timeout_secs:
-          type: integer
-          description: Seconds before the verification code expires.
-          example: 300
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:

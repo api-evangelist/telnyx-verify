@@ -229,16 +229,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    VerifyProfileMessageTemplate:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        text:
-          type: string
-          description: Template body; must contain the verification code placeholder.
-          example: 'Your {{app_name}} verification code is: {{code}}.'
     Errors:
       type: object
       properties:
@@ -253,19 +243,16 @@ components:
                 type: string
               detail:
                 type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
+    VerifyProfileMessageTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          description: Template body; must contain the verification code placeholder.
+          example: 'Your {{app_name}} verification code is: {{code}}.'
   parameters:
     VerifyProfileIdPath:
       name: verify_profile_id
@@ -275,6 +262,19 @@ components:
         type: string
         format: uuid
       description: The identifier of the Verify profile.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   securitySchemes:
     bearerAuth:
       type: http
