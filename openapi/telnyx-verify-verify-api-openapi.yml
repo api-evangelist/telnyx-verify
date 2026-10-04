@@ -214,47 +214,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    PhoneNumberPath:
-      name: phone_number
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The phone number in E.164 format, e.g. +15551234567.
   schemas:
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-    TriggerVerificationRequest:
-      type: object
-      required:
-      - phone_number
-      - verify_profile_id
-      properties:
-        phone_number:
-          type: string
-          description: The receiving phone number in E.164 format.
-          example: '+15551234567'
-        verify_profile_id:
-          type: string
-          format: uuid
-          description: The Verify profile whose channel configuration should be used.
-        timeout_secs:
-          type: integer
-          description: Seconds before the verification code expires.
-          example: 300
     VerifyCodeRequest:
       type: object
       required:
@@ -315,6 +275,46 @@ components:
             updated_at:
               type: string
               format: date-time
+    TriggerVerificationRequest:
+      type: object
+      required:
+      - phone_number
+      - verify_profile_id
+      properties:
+        phone_number:
+          type: string
+          description: The receiving phone number in E.164 format.
+          example: '+15551234567'
+        verify_profile_id:
+          type: string
+          format: uuid
+          description: The Verify profile whose channel configuration should be used.
+        timeout_secs:
+          type: integer
+          description: Seconds before the verification code expires.
+          example: 300
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+  parameters:
+    PhoneNumberPath:
+      name: phone_number
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The phone number in E.164 format, e.g. +15551234567.
   responses:
     NotFound:
       description: The requested resource was not found.

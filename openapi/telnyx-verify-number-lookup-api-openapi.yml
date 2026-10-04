@@ -56,6 +56,19 @@ components:
       schema:
         type: string
       description: The phone number in E.164 format, e.g. +15551234567.
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   schemas:
     NumberLookupResponse:
       type: object
@@ -102,19 +115,6 @@ components:
                 type: string
               detail:
                 type: string
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
   securitySchemes:
     bearerAuth:
       type: http
