@@ -129,3 +129,42 @@ plans:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  - subscription
+  units:
+  - compute
+  - message
+  - negotiated
+  - request
+  - transaction
+  plans:
+  - name: Verify - Pay As You Go
+    access: other
+    model: metered
+    model_how: stated
+    units:
+    - compute
+    - message
+    - transaction
+    periods:
+    - month
+  - name: Number Lookup - Pay As You Go
+    access: other
+    model: metered
+    model_how: stated
+    units:
+    - request
+    periods:
+    - month
+  - name: Volume / Committed Use
+    access: enterprise
+    model: subscription
+    model_how: derived
+    units:
+    - negotiated
+    periods:
+    - year
